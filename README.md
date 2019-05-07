@@ -8,6 +8,56 @@
 
 ## Getting Started
 
+Number and name of feature: Feature #1
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 8:15am
+
+Finish time: 8:45am
+
+Actual time needed to complete: 30 minutes
+
+Number and name of feature: Feature #2
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 8:50am
+
+Finish time: 9:45am
+
+Actual time needed to complete: less than an hour
+
+Number and name of feature: Feature #3
+
+Estimate of time needed to complete: 1.5 hour
+
+Start time: 9:50am
+
+Finish time: 11:15am
+
+Actual time needed to complete: almost an hour and a half
+
+Number and name of feature: Feature #4
+
+Estimate of time needed to complete: 45 minutes
+
+Start time: 11:20am
+
+Finish time: 12:00pm
+
+Actual time needed to complete: 40 minutes
+
+Number and name of feature: Feature #5
+
+Estimate of time needed to complete: 45 minutes
+
+Start time: 12:00pm
+
+Finish time: 12:30pm
+
+Actual time needed to complete: 30 minutes
+
 $ npm install
 
 ## Architecture
