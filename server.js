@@ -71,16 +71,33 @@ app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 
 
 function Book(info) {
-  this.image_url = info.imageLinks.medium || 'https://i.imgur.com/J5LVHEL.jpg';
+  this.image_url = convertURL(info.imageLinks.thumbnail) || 'https://i.imgur.com/J5LVHEL.jpg';
   this.title = info.title || 'No title available';
   this.authors = info.authors || 'No authors available';
   this.isbn = info.industryIdentifiers[0].identifier || 'No ISBN available';
   this.description = info.description || 'No description found';
-
-  // add more things here
-
 }
 
+//-------------------*
+//
+// Helper functions
+//
+// ------------------*
+
+const convertURL = (data) => {
+  let urlRegEx = /^http?:/g;
+  if (urlRegEx.test(data)){
+    return data.replace('http', 'https');
+  }
+  return data;
+};
+
+
+//-------------------*
+//
+// Functions
+//
+// ------------------*
 function newSearch(request, response){
   response.render('pages/index');
 }
