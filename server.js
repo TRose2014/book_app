@@ -71,7 +71,7 @@ app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 
 
 function Book(info) {
-  this.image_url = info.image_url || 'https://i.imgur.com/J5LVHEL.jpg';
+  this.image_url = info.imageLinks.medium || 'https://i.imgur.com/J5LVHEL.jpg';
   this.title = info.title || 'No title available';
   this.authors = info.authors || 'No authors available';
   this.isbn = info.industryIdentifiers[0].identifier || 'No ISBN available';
