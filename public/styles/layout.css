@@ -1,0 +1,19 @@
+main{
+  display: flex;
+  flex-direction: column;
+}
+
+section{
+  display: flex;
+  flex-flow: row wrap;
+}
+
+h1,p{
+  display: flex;
+  justify-content: center;
+}
+
+.images{
+  display: flex;
+  justify-content: center
+}

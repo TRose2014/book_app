@@ -1,0 +1,32 @@
+h1, span{
+  font-size: 1.5em;
+  font-weight: bold;
+  color: black;
+}
+
+a{
+  font-size: 1.5em;
+}
+
+li{
+  margin-bottom: 3%;
+  color: saddlebrown;
+}
+
+form{
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+input{
+  font-size: 30px;
+  display: flex;
+  flex-flow: column nowrap;
+  background-color: whitesmoke;
+
+}
+
+button{
+  font-size: 40px;
+  background: whitesmoke;
+}

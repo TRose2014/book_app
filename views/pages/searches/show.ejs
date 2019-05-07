@@ -6,21 +6,24 @@
    <title>Book App: New Search</title>
    <meta name="description" content="View free books and add them to your list">
    <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="../styles/reset.css">
    <link rel="stylesheet" href="../styles/base.css">
  </head>
  <body>
    <main>
     <h1>Welcome to Our Book App: Search results</h1>
     <p><a href="/">Home</a></p>
-    <ul>
-      <% searchResults.forEach(book => { %>
-        <li>Book: <%= book.title %> </li>
-        <li>Authors: <%= book.authors %> </li>
-        <li>Description: <%= book.description %> <li>
-        <li>ISBN: <%= book.isbn %> <li>
-        <li><img src= <%=book.image_url %></li>
-        
-     <% }) %>
-    </ul>
+    <section>
+      <ul>
+        <% searchResults.forEach(book => { %>
+          <li><span>Book:</span> <%= book.title %> </li>
+          <li><span>Authors:</span> <%= book.authors %> </li>
+          <li><span>Description:</span> <%= book.description %> <li>
+          <li><span>ISBN:</span> <%= book.isbn %> <li>
+          <li class= "images"><img src= <%=book.image_url %></li>
+          
+        <% }) %>
+      </ul>
+  </section>
  </body>
 </html>
