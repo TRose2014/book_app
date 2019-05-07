@@ -71,8 +71,11 @@ app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 
 
 function Book(info) {
-  this.image_url = info.image_url || 'https://i.imgur.com/J5LVHEL.jpg';
+  this.image_url = info.imageLinks.medium || 'https://i.imgur.com/J5LVHEL.jpg';
   this.title = info.title || 'No title available';
+  this.authors = info.authors || 'No authors available';
+  this.isbn = info.industryIdentifiers[0].identifier || 'No ISBN available';
+  this.description = info.description || 'No description found';
 
   // add more things here
 
@@ -84,12 +87,16 @@ function newSearch(request, response){
 
 function performSearch(request, response){
   console.log(request.body);
-  console.log(request.body.search);
+  console.log('here', request.body.search);
   let url = `https://www.googleapis.com/books/v1/volumes?q=+in${request.body.search[1]}:${request.body.search[0]}`;
-
+  
+  
 
   superagent.get(url)
     .then(apiResponse => apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
+    // .then(apiResponse => console.log(apiResponse.body.items))
+    // .then(apiResponse => console.log())
+    
     .then(books => response.render('pages/searches/show', {searchResults: books}))
     .catch(console.error);
 }
