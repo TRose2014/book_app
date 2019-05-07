@@ -47,9 +47,11 @@ let errorMessage = (error, response) => {
 // ------------------*
 
 app.set('view engine', 'ejs');
+app.use(express.static('public'));
 
 app.get('/', newSearch);
 app.get('/hello');
+app.get('/error', errorPage);
 
 app.post('/searches', performSearch);
 
@@ -92,6 +94,16 @@ const convertURL = (data) => {
   return data;
 };
 
+
+//-------------------*
+//
+// Error functions
+//
+// ------------------*
+
+function errorPage(request, response){
+  response.render('pages/error');
+}
 
 //-------------------*
 //
