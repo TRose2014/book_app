@@ -8,6 +8,8 @@
 
 const express = require('express');
 const superagent = require('superagent');
+const pg = require('pg');
+
 
 
 //-------------------*
@@ -27,6 +29,17 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
+
+
+//-------------------*
+//
+// DataBase Setup
+//
+// ------------------*
+const client = new pg.Client(process.env.DATABASE_URL);
+client.connect();
+client.on('error', err => console.error(err));
+
 
 
 //-------------------*
@@ -101,8 +114,8 @@ const convertURL = (data) => {
 //
 // ------------------*
 
-function errorPage(request, response){
-  response.render('pages/error');
+function errorPage(error, response){
+  response.render('pages/error', {error: 'There was an issue'});
 }
 
 //-------------------*
@@ -118,14 +131,44 @@ function performSearch(request, response){
   console.log(request.body);
   console.log('here', request.body.search);
   let url = `https://www.googleapis.com/books/v1/volumes?q=+in${request.body.search[1]}:${request.body.search[0]}`;
-  
-  
+
+
 
   superagent.get(url)
     .then(apiResponse => apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
     // .then(apiResponse => console.log(apiResponse.body.items))
     // .then(apiResponse => console.log())
-    
+
     .then(books => response.render('pages/searches/show', {searchResults: books}))
+    // .then(books => response.render('pages/searches/new', {searchResults: books}))
     .catch(console.error);
 }
+
+//-------------------*
+//
+// Retrieve from DataBase
+//
+// ------------------*
+function getBooks(request, response){
+  let SQL = 'SELECT * FROM books_app;';
+
+  return client.query(SQL)
+    .then(results => response.render('index', {results: results.rows}))
+    .catch(err => errorPage(err, response));
+}
+
+// function getOneBook(request, response){
+//   let SQL = `SELECT * FROM books_app WHERE id=$1;`;
+//   // let values = [request.params.];
+
+//   return client.query(SQL, values)
+//     .then(result => {
+//       response.render('pages/index', {task: result.rows});
+//     })
+//     .catch(err => handleError(err, response));
+// }
+// function showBook(request, response){
+//   request.render('pages/index');
+// }
+
+
