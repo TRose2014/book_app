@@ -71,8 +71,12 @@ app.use(express.static('public'));
 app.get('/', getBooks);
 app.get('/hello');
 app.get('/error', errorPage);
+app.post('/searches/new', performSearch);
+app.get('/searches/new', newSearch);
 
-app.post('/searches', performSearch);
+
+// app.post('/searches', newSearch);
+
 
 //-------------------*
 //
@@ -110,7 +114,6 @@ const convertURL = (data) => {
 // ------------------*
 
 function errorPage(error, response){
-  console.log('hello');
   response.render('pages/error', {error: 'There was an issue'});
 }
 
@@ -121,27 +124,22 @@ function errorPage(error, response){
 // ------------------*
 
 function newSearch(request, response){
-  response.render('pages/index');
+  response.render('pages/searches/new');
 }
 
 function performSearch(request, response){
-  console.log(request.body);
-  console.log('here', request.body.search);
   let url = `https://www.googleapis.com/books/v1/volumes?q=+in${request.body.search[1]}:${request.body.search[0]}`;
 
 
 
   superagent.get(url)
     .then(apiResponse => apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
-    // .then(apiResponse => console.log(apiResponse.body.items))
-    // .then(apiResponse => console.log())
 
     .then(books => response.render('pages/searches/show', {searchResults: books}))
-    // .then(books => response.render('pages/searches/new', {searchResults: books}))
+    .then(books => response.render('pages/searches/new', {searchResults: books}))
     .catch(console.error);
 }
 
-// app.get('/', getBooks);
 
 
 //-------------------*
@@ -151,13 +149,12 @@ function performSearch(request, response){
 // ------------------*
 function getBooks(request, response){
   let SQL = 'SELECT * FROM books;';
-  let values = [request.params.book_id];
+  // let values = [request.params.book_id];
 
-  console.log('howdy');
   return client.query(SQL)
     .then(results => {
       console.log(results.rows);
-      response.render('pages/index', {savedBooks: results.rows});
+      response.render('pages/index', {savedBooks: results.rows, booksAmount: results.rows.length});
     })
     .catch(err => {
       console.log('oops');
