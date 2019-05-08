@@ -8,6 +8,8 @@
 
 const express = require('express');
 const superagent = require('superagent');
+const pg = require('pg');
+
 
 
 //-------------------*
@@ -21,6 +23,14 @@ const PORT = process.env.PORT || 3000;
 
 //-------------------*
 //
+// Environment variables
+//
+// ------------------*
+
+require('dotenv').config();
+
+//-------------------*
+//
 // Application Middleware
 //
 // ------------------*
@@ -28,11 +38,20 @@ const PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
 
+//-------------------*
+//
+// DataBase Setup
+//
+// ------------------*
+
+const client = new pg.Client(process.env.DATABASE_URL);
+client.connect();
+client.on('error', err => console.error(err));
 
 //-------------------*
 //
 // Error Message
-// not sure we need this?
+//
 // ------------------*
 
 let errorMessage = (error, response) => {
@@ -49,21 +68,15 @@ let errorMessage = (error, response) => {
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
-app.get('/', newSearch);
+app.get('/', getBooks);
 app.get('/hello');
 app.get('/error', errorPage);
+app.post('/searches/new', performSearch);
+app.get('/searches/new', newSearch);
 
-app.post('/searches', performSearch);
 
-//-------------------*
-//
-// Catch All
-//
-// ------------------*
+// app.post('/searches', newSearch);
 
-app.get('*', (request, response) => response.status(404).send('This route does not exist'));
-
-app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 
 //-------------------*
 //
@@ -94,15 +107,14 @@ const convertURL = (data) => {
   return data;
 };
 
-
 //-------------------*
 //
 // Error functions
 //
 // ------------------*
 
-function errorPage(request, response){
-  response.render('pages/error');
+function errorPage(error, response){
+  response.render('pages/error', {error: 'There was an issue'});
 }
 
 //-------------------*
@@ -110,22 +122,68 @@ function errorPage(request, response){
 // Functions
 //
 // ------------------*
+
 function newSearch(request, response){
-  response.render('pages/index');
+  response.render('pages/searches/new');
 }
 
 function performSearch(request, response){
-  console.log(request.body);
-  console.log('here', request.body.search);
   let url = `https://www.googleapis.com/books/v1/volumes?q=+in${request.body.search[1]}:${request.body.search[0]}`;
-  
-  
+
+
 
   superagent.get(url)
     .then(apiResponse => apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
-    // .then(apiResponse => console.log(apiResponse.body.items))
-    // .then(apiResponse => console.log())
-    
+
     .then(books => response.render('pages/searches/show', {searchResults: books}))
+    .then(books => response.render('pages/searches/new', {searchResults: books}))
     .catch(console.error);
 }
+
+
+
+//-------------------*
+//
+// Retrieve from DataBase
+//
+// ------------------*
+function getBooks(request, response){
+  let SQL = 'SELECT * FROM books;';
+  // let values = [request.params.book_id];
+
+  return client.query(SQL)
+    .then(results => {
+      console.log(results.rows);
+      response.render('pages/index', {savedBooks: results.rows, booksAmount: results.rows.length});
+    })
+    .catch(err => {
+      console.log('oops');
+      errorPage(err, response);
+    });
+}
+
+// function getOneBook(request, response){
+//   let SQL = `SELECT * FROM books_app WHERE id=$1;`;
+//   // let values = [request.params.];
+
+//   return client.query(SQL, values)
+//     .then(result => {
+//       response.render('pages/index', {task: result.rows});
+//     })
+//     .catch(err => handleError(err, response));
+// }
+// function showBook(request, response){
+//   request.render('pages/index');
+// }
+
+
+//-------------------*
+//
+// Catch All
+//
+// ------------------*
+
+app.get('*', (request, response) => response.status(404).send('This route does not exist'));
+
+app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
+
