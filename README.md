@@ -4,11 +4,12 @@
 **Version**: 1.0.0 (increment the patch/fix version number if you make more commits past your first submission)
 
 ## Overview
-<!-- Provide a high level overview of what this application is and why you are building it, beyond the fact that it's an assignment for a Code 301 class. (i.e. What's your problem domain?) -->
+Cool book app that allows a user to search for books by title or author. The app access the Google Books API and stores the results in a database.
 
 ## Getting Started
 
-Number and name of feature: Feature #1
+### Day 1
+#### Number and name of feature: Feature #1
 
 Estimate of time needed to complete: 1 hour
 
@@ -18,7 +19,7 @@ Finish time: 8:45am
 
 Actual time needed to complete: 30 minutes
 
-Number and name of feature: Feature #2
+#### Number and name of feature: Feature #2
 
 Estimate of time needed to complete: 1 hour
 
@@ -28,7 +29,7 @@ Finish time: 9:45am
 
 Actual time needed to complete: less than an hour
 
-Number and name of feature: Feature #3
+#### Number and name of feature: Feature #3
 
 Estimate of time needed to complete: 1.5 hour
 
@@ -38,7 +39,7 @@ Finish time: 11:15am
 
 Actual time needed to complete: almost an hour and a half
 
-Number and name of feature: Feature #4
+#### Number and name of feature: Feature #4
 
 Estimate of time needed to complete: 45 minutes
 
@@ -48,7 +49,7 @@ Finish time: 12:00pm
 
 Actual time needed to complete: 40 minutes
 
-Number and name of feature: Feature #5
+#### Number and name of feature: Feature #5
 
 Estimate of time needed to complete: 45 minutes
 
@@ -58,15 +59,33 @@ Finish time: 12:30pm
 
 Actual time needed to complete: 30 minutes
 
+### Day 2
+#### Number and name of feature: Feature #1 
+
+Estimate of time needed to complete: 1 hr 20 minute
+
+Start time: 8:50am
+
+Finish time: 
+
+Actual time needed to complete: 
+
+## Program Setpup
+
 $ npm install
 
+create .env file folling env-sample guidelines
+
 ## Architecture
-<!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
+Technologies: express, postgres, superagent, dotenv, ejs
+
+## Schema documentation
+<!-- not sure what does here -->
 
 ## Change Log
-<!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an examples:
+<!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an examples:  -->
 
-01-01-2001 4:59pm - Application now has a fully-functional express server, with GET and POST routes for the book resource.
+05-07-2019 12:30pm - Application now has a fully-functional express server, with GET and POST routes for the book resource.
 
 ## Credits and Collaborations
 Matt Wilkin
