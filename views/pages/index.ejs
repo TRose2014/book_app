@@ -13,7 +13,7 @@
     <h1>Welcome to Our Book App</h1>
     <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Labore amet voluptas voluptate laborum rerum voluptates maxime, debitis, animi tempore cupiditate dolorem culpa excepturi. Libero iusto placeat quasi blanditiis quam ut.</p>
 
-    <h2>Search by Title or Author</h2>
+    <!-- <h2>Search by Title or Author</h2>
     <form action="/searches" method="post" autocomplete="off">
       <input type="text" name="search" placeholder="Enter title or author" required>
       <fieldset>
@@ -29,7 +29,18 @@
         </label>
       </fieldset>
       <button type="submit">Search the Google Books API</button>
-    </form>   
+    </form>    -->
+
+    <section class="book-view container">
+      <ul id="book-list">
+        <% savedBooks.forEach(book => { %>
+          <li class="book-item" data.id="<%= book.id %>">
+            <h4>Book: <%= book.title %></h4>
+            <p>Author: <%= book.author %></p>
+          </li>
+        <% }) %>
+      </ul>
+    </section>
   </main>
  </body>
 </html>

@@ -23,6 +23,14 @@ const PORT = process.env.PORT || 3000;
 
 //-------------------*
 //
+// Environment variables
+//
+// ------------------*
+
+require('dotenv').config();
+
+//-------------------*
+//
 // Application Middleware
 //
 // ------------------*
@@ -30,22 +38,20 @@ const PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
 
-
 //-------------------*
 //
 // DataBase Setup
 //
 // ------------------*
+
 const client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 client.on('error', err => console.error(err));
 
-
-
 //-------------------*
 //
 // Error Message
-// not sure we need this?
+//
 // ------------------*
 
 let errorMessage = (error, response) => {
@@ -62,21 +68,11 @@ let errorMessage = (error, response) => {
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
-app.get('/', newSearch);
+app.get('/', getBooks);
 app.get('/hello');
 app.get('/error', errorPage);
 
 app.post('/searches', performSearch);
-
-//-------------------*
-//
-// Catch All
-//
-// ------------------*
-
-app.get('*', (request, response) => response.status(404).send('This route does not exist'));
-
-app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 
 //-------------------*
 //
@@ -107,7 +103,6 @@ const convertURL = (data) => {
   return data;
 };
 
-
 //-------------------*
 //
 // Error functions
@@ -115,6 +110,7 @@ const convertURL = (data) => {
 // ------------------*
 
 function errorPage(error, response){
+  console.log('hello');
   response.render('pages/error', {error: 'There was an issue'});
 }
 
@@ -123,6 +119,7 @@ function errorPage(error, response){
 // Functions
 //
 // ------------------*
+
 function newSearch(request, response){
   response.render('pages/index');
 }
@@ -144,17 +141,28 @@ function performSearch(request, response){
     .catch(console.error);
 }
 
+// app.get('/', getBooks);
+
+
 //-------------------*
 //
 // Retrieve from DataBase
 //
 // ------------------*
 function getBooks(request, response){
-  let SQL = 'SELECT * FROM books_app;';
+  let SQL = 'SELECT * FROM books;';
+  let values = [request.params.book_id];
 
+  console.log('howdy');
   return client.query(SQL)
-    .then(results => response.render('index', {results: results.rows}))
-    .catch(err => errorPage(err, response));
+    .then(results => {
+      console.log(results.rows);
+      response.render('pages/index', {savedBooks: results.rows});
+    })
+    .catch(err => {
+      console.log('oops');
+      errorPage(err, response);
+    });
 }
 
 // function getOneBook(request, response){
@@ -171,4 +179,14 @@ function getBooks(request, response){
 //   request.render('pages/index');
 // }
 
+
+//-------------------*
+//
+// Catch All
+//
+// ------------------*
+
+app.get('*', (request, response) => response.status(404).send('This route does not exist'));
+
+app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 

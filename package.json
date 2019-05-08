@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/TRose2014/book_app#readme",
   "dependencies": {
+    "dotenv": "^8.0.0",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "pg": "^7.10.0",
