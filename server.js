@@ -8,6 +8,7 @@
 
 const express = require('express');
 const superagent = require('superagent');
+require('dotenv').config();
 const pg = require('pg');
 
 
@@ -21,13 +22,6 @@ const pg = require('pg');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-//-------------------*
-//
-// Environment variables
-//
-// ------------------*
-
-require('dotenv').config();
 
 //-------------------*
 //
@@ -50,6 +44,14 @@ client.on('error', err => console.error(err));
 
 //-------------------*
 //
+// Set the view engine for server-side templating
+//
+// ------------------*
+
+app.set('view engine', 'ejs');
+
+//-------------------*
+//
 // Error Message
 //
 // ------------------*
@@ -61,21 +63,19 @@ let errorMessage = (error, response) => {
 
 //-------------------*
 //
-// Set the view engine for server-side templating
+// Routes
 //
 // ------------------*
 
-app.set('view engine', 'ejs');
-app.use(express.static('public'));
-
 app.get('/', getBooks);
-app.get('/hello');
+// app.get('/hello');
 app.get('/error', errorPage);
 app.post('/searches/new', performSearch);
 app.get('/searches/new', newSearch);
+app.get('/books/:books_id', getOneBook);
 
 
-// app.post('/searches', newSearch);
+app.post('/searches', newSearch);
 
 
 //-------------------*
@@ -89,6 +89,7 @@ function Book(info) {
   this.image_url = convertURL(info.imageLinks.thumbnail) || 'https://i.imgur.com/J5LVHEL.jpg';
   this.title = info.title || 'No title available';
   this.authors = info.authors || 'No authors available';
+  console.log(info.industryIdentifiers);
   this.isbn = info.industryIdentifiers[0].identifier || 'No ISBN available';
   this.description = info.description || 'No description found';
 }
@@ -125,6 +126,7 @@ function errorPage(error, response){
 
 function newSearch(request, response){
   response.render('pages/searches/new');
+  // response.render('pages/index');
 }
 
 function performSearch(request, response){
@@ -136,10 +138,9 @@ function performSearch(request, response){
     .then(apiResponse => apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
 
     .then(books => response.render('pages/searches/show', {searchResults: books}))
-    .then(books => response.render('pages/searches/new', {searchResults: books}))
+    // .then(books => response.render('pages/searches/new', {searchResults: books}))
     .catch(console.error);
 }
-
 
 
 //-------------------*
@@ -162,16 +163,17 @@ function getBooks(request, response){
     });
 }
 
-// function getOneBook(request, response){
-//   let SQL = `SELECT * FROM books_app WHERE id=$1;`;
-//   // let values = [request.params.];
+function getOneBook(request, response){
+  let SQL = `SELECT * FROM books WHERE id=$1;`;
+  let values = [request.params.id];
 
-//   return client.query(SQL, values)
-//     .then(result => {
-//       response.render('pages/index', {task: result.rows});
-//     })
-//     .catch(err => handleError(err, response));
-// }
+  return client.query(SQL, values)
+    .then(result => {
+      response.render('pages/books/show', {task: result.rows});
+    })
+    .catch(err => errorPage(err, response));
+}
+
 // function showBook(request, response){
 //   request.render('pages/index');
 // }
