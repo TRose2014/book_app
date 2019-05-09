@@ -1,0 +1,11 @@
+<section>
+    <ul>
+      <% searchResults.forEach(book => { %>
+        <li class= "images"><img src= <%=book.image_url %></li>
+        <li><span>Book:</span> <%= book.title %> </li>
+        <li><span>Authors:</span> <%= book.authors %> </li>
+        <li><span>Description:</span> <%= book.description %> <li>
+        <li><span>ISBN:</span> <%= book.isbn %> <li>          
+      <% }) %>
+    </ul>
+</section>
