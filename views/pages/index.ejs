@@ -9,8 +9,10 @@
       <ul id="book-list">
         <% savedBooks.forEach(book => { %>
           <li class="book-item" data.id="<%= book.id %>">
+            <li class= "images"><img src= <%=book.image_url %></li>
             <h4>Book: <%= book.title %></h4>
             <p>Author: <%= book.author %></p>
+            <a href="/books/<%=book.id%>">View Details</a>
           </li>
         <% }) %>
       </ul>

@@ -72,7 +72,8 @@ app.get('/', getBooks);
 app.get('/error', errorPage);
 app.post('/searches/new', performSearch);
 app.get('/searches/new', newSearch);
-app.get('/books/:books_id', getOneBook);
+app.get('/books/:id', getOneBook);
+app.get('/add', showBook);
 
 
 app.post('/searches', newSearch);
@@ -169,14 +170,14 @@ function getOneBook(request, response){
 
   return client.query(SQL, values)
     .then(result => {
-      response.render('pages/books/show', {task: result.rows});
+      response.render('pages/books/show', {book: result.rows[0]});
     })
     .catch(err => errorPage(err, response));
 }
 
-// function showBook(request, response){
-//   request.render('pages/index');
-// }
+function showBook(request, response){
+  request.render('pages/index');
+}
 
 
 //-------------------*
