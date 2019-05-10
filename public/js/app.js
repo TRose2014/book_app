@@ -1,8 +1,15 @@
-$('.book-item').on('click', 'button', function(event){
-  console.log('Hey');
+$('.view-book').on('click', function(event){
   event.preventDefault();
-  $('.book-view').addClass('hide-me');
-  $('.book-form-view').removeClass('hide-me');
+
+  let className = $(event.target).siblings('form').attr('class');
+
+  if(event.target.className.includes('view-book')){
+    if(className.includes('hide-me')){
+      $(event.target).siblings('form').removeClass('hide-me');
+    }else{
+      $(event.target).siblings('form').addClass('hide-me');
+    }
+  }
 });
 
 
