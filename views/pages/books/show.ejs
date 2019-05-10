@@ -1,7 +1,17 @@
 <!DOCTYPE >
 <html lang="en">
-    <%- include('../layout/head') %>
+    <%- include('../../layout/head') %>
  <body>
-   <a href="/">Home Page</a>
-   <%- include('./detail') %>
+    <%- include('../../layout/header') %>
+    <main>
+        <%- include('./detail', { book: book }) %>
+        <%# <section class="book-form-view hide-me container"> %>
+          <%# <%- include('./form', {formAction: 'Update', book: book}) %>
+        <%# </section> %>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"></script>
+    <script src="/js/app.js"></script>
  </body>
+ </html>
