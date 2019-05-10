@@ -79,21 +79,31 @@ app.get('/add', showBook);
 app.post('/searches', newSearch);
 
 
+
 //-------------------*
 //
 // Constructor Function
 //
 // ------------------*
 
-
 function Book(info) {
   this.image_url = convertURL(info.imageLinks.thumbnail) || 'https://i.imgur.com/J5LVHEL.jpg';
   this.title = info.title || 'No title available';
   this.authors = info.authors || 'No authors available';
-  console.log(info.industryIdentifiers);
   this.isbn = info.industryIdentifiers[0].identifier || 'No ISBN available';
   this.description = info.description || 'No description found';
+  this.bookshelf = 'Action';
 }
+
+Book.prototype.save = function(){
+  let SQL = `INSERT INTO books 
+    (image_url, title, authors, isbn, description, bookshelf)
+    VALUES ($1, $2, $3, $4, $5 $6)
+    RETURNING id;`;
+
+  let values = Object.values(this);
+  return client.query(SQL, values);
+};
 
 //-------------------*
 //
@@ -178,6 +188,16 @@ function getOneBook(request, response){
 function showBook(request, response){
   request.render('pages/index');
 }
+
+let saveBook = (request, response) => {
+  let newBook = new Book(request.body);
+  return newBook.save()
+    .then(book => {
+      response.redirect(`/books/;${book.rows[0].id}`);
+    });
+};
+
+app.post('/books', saveBook);
 
 
 //-------------------*
