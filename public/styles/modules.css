@@ -32,5 +32,6 @@ button{
 }
 
 .hide-me{
-  display: none;
+  /* display: none; */
+  visibility: hidden;
 }

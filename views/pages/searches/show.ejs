@@ -5,7 +5,6 @@
     <main id="bookSearchSection">
       <h1>Book App: Search results</h1>
       <a href="/"><button>Home</button></a>
-      <%# include('../../layout/book-layout') %>
       <% searchResults.forEach(book => { %>
         <section>
           <%- include('../books/detail', {book: book}) %>
