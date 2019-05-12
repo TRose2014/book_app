@@ -1,5 +1,7 @@
-@import url("layout.css");
-@import url("modules.css");
+@import url("./reset.css");
+@import url("./layout.css");
+@import url("./modules.css");
+@import url("./icons.css");
 
 body {
   background-color:cornsilk;

@@ -77,7 +77,7 @@ $ npm install
 create .env file folling env-sample guidelines
 
 ## Architecture
-Technologies: express, postgres, superagent, dotenv, ejs
+Technologies: express, postgres, superagent, dotenv, ejs, methodOverride
 
 ## Schema documentation
 <!-- not sure what does here -->
