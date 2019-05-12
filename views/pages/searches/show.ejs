@@ -9,7 +9,7 @@
         <section>
           <%- include('../books/detail', {book: book}) %>
           <button class="viewButton">Select this Book</button>
-          <%- include('../books/edit', {book: book, formAction: 'Add'}) %>
+          <%- include('../books/edit', {element: book, formAction: 'Add'}) %>
         </section>
       <% }) %>
     </main>

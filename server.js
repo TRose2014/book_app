@@ -35,6 +35,15 @@ app.use(express.static('public'));
 
 //dev out methodoverride: look at urlencoded POST bodies and delete them
 
+app.use(methodOverride(function (request, response){
+  if(request.body && typeof request.body === 'object' && '_method' in request.body){
+    console.log(request.body._method);
+    var method =request.body._method;
+    delete request.body._method;
+    return method;
+  }
+}));
+
 
 
 //-------------------*
@@ -80,8 +89,8 @@ app.get('/books/:id', getOneBook);
 app.put('/books/:id', updateBook);
 app.get('/error', errorPage);
 
-// need a delete route
-// something like app.delete('/books/:id, deleteBook);
+// delete route
+app.delete('/books/:id', deleteBook);
 
 //-------------------*
 //
@@ -189,7 +198,6 @@ function saveBook(request, response){
 
   let values = [title, author, isbn, image_url, description, bookshelf];
 
-
   console.log('in save book');
   console.log('saveBook function', request.body);
 
@@ -206,21 +214,29 @@ function updateBook(request, response){
   let { title, author, isbn, image_url, description, bookshelf } = request.body;
 
   let SQL = 'UPDATE books SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5, bookshelf=$6, WHERE id=$7;';
+
   console.log(request.params.id);
+
   let values = [title, author, isbn, image_url, description, bookshelf, request.params.id];
+
   console.log(values);
-  
+
   return client.query(SQL, values)
     .then(response.redirect(`/books/${request.params.id}`))
     .catch(err => errorPage(err, response));
-
 }
 
 
 //delete
-// function deleteBook(request, response){
 
-// }
+function deleteBook(request, response){
+  let SQL = 'DELETE FROM books WHERE id=$1;';
+  let values = [request.params.id];
+
+  client.query(SQL, values)
+    .then(response.redirect('/'))
+    .catch(err => errorPage(err, response));
+}
 
 
 //-------------------*
