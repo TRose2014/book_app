@@ -1,4 +1,4 @@
-$('.view-book').on('click', function(event){
+$('.viewButton').on('click', function(event){
   event.preventDefault();
 
   let className = $(event.target).siblings('form').attr('class');
