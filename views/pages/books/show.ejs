@@ -8,6 +8,10 @@
       <h2>Book Details</h2>
       <%- include('./detail', {book: results}) %>
       <button class="viewButton">Update Book Details</button>
+      <form class="deleteForm" action="/books/<%=results.id %>" method="post">
+        <input type="hidden" name="_method" value="delete">
+        <button class="deleteButton">Delete Book</button>
+      </form>
       <%- include('./edit', {element: results, formAction: 'Update'}) %>
     </main>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"

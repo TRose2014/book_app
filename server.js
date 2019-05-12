@@ -85,6 +85,8 @@ app.post('/book', saveBook);
 app.get('/books/:id', getOneBook);
 app.put('/books/:id', updateBook);
 app.get('/error', errorPage);
+// delete route
+app.delete('/books/:id', deleteBook);
 
 // need a delete route
 // something like app.delete('/books/:id, deleteBook);
@@ -101,13 +103,21 @@ function Book(info) {
   //maybe just list first one?
 
   let image = convertURL(info.imageLinks.thumbnail);
+  // console.log(info.imageLinks.thumbnail);
+  console.log('HI');
+  console.log(image);
+
 
   this.title = info.title || 'No title available';
   this.author = info.authors || 'No authors available';
-  this.isbn = info.industryIdentifiers[0].identifier || 'No ISBN available';
   this.image_url = image || 'https://i.imgur.com/J5LVHEL.jpg';
+  this.isbn = info.industryIdentifiers[0].identifier || 'No ISBN available';
+  // this.image_url = convertURL(info.imageLinks.thumbnail) || 'https://i.imgur.com/J5LVHEL.jpg';
   this.description = info.description || 'No description found';
   this.bookshelf = 'select category';
+
+
+  //Try doing the book.save prototype to see if it helps. If not the focus on CSS and drop down menu
 
 }
 
@@ -179,6 +189,8 @@ function getOneBook(request, response){
   let SQL = `SELECT * FROM books WHERE id=$1;`;
   let values = [request.params.id];
 
+  console.log(request.body);
+
   return client.query(SQL, values)
     .then(result => {
       response.render('pages/books/show', {results: result.rows[0]});
@@ -187,10 +199,8 @@ function getOneBook(request, response){
 }
 
 //save
-
 function saveBook(request, response){
   let { title, author, isbn, image_url, description, bookshelf } = request.body;
-
   let SQL = 'INSERT INTO books(title, author, isbn, image_url, description, bookshelf) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;';
 
   let values = [title, author, isbn, image_url, description, bookshelf];
@@ -215,7 +225,7 @@ function updateBook(request, response){
   console.log(request.params.id);
   let values = [title, author, isbn, image_url, description, bookshelf, request.params.id];
   console.log(values);
-  
+
   return client.query(SQL, values)
     .then(response.redirect(`/books/${request.params.id}`))
     .catch(err => errorPage(err, response));
@@ -224,9 +234,21 @@ function updateBook(request, response){
 
 
 //delete
-// function deleteBook(request, response){
 
-// }
+function deleteBook(request, response){
+  let SQL = 'DELETE FROM books WHERE id=$1;';
+  let values = [request.params.id];
+
+  client.query(SQL, values)
+    .then(response.redirect('/'))
+    .catch(err => errorPage(err, response));
+}
+
+
+//1. Save an image URL to the DB
+//2. Figure out why image URL is undefined when entering the save function
+//3. Fix the update functionality
+//4. CSS it up!
 
 
 //-------------------*

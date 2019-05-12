@@ -10,3 +10,6 @@ CREATE TABLE books (
   description TEXT,
   bookshelf VARCHAR(255)
 );
+
+INSERT INTO books (author, title, isbn, image_url, description)
+VALUES ('Billy', 'Ma Billy', '876542346', 'http://books.google.com/books/content?id=2WxktmTXrzwC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api', 'Who cares');
