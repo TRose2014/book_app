@@ -75,9 +75,9 @@ let errorMessage = (error, response) => {
 app.get('/', loadHome);
 app.get('/searches/new', newSearch);
 app.post('/searches', performSearch);
-app.get('/books/:id', getBook);
+app.post('/book', saveBook);
+app.get('/books/:id', getOneBook);
 app.put('/books/:id', updateBook);
-app.get('/add', showBook);
 app.get('/error', errorPage);
 
 // need a delete route
@@ -105,15 +105,6 @@ function Book(info) {
 
 }
 
-Book.prototype.save = function(){
-  let SQL = `INSERT INTO books 
-    (image_url, title, authors, isbn, description, bookshelf)
-    VALUES ($1, $2, $3, $4, $5, $6)
-    RETURNING id;`;
-
-  let values = Object.values(this);
-  return client.query(SQL, values);
-};
 
 //-------------------*
 //
@@ -136,7 +127,7 @@ const convertURL = (data) => {
 // ------------------*
 
 function errorPage(error, response){
-  response.render('pages/error', {error: 'There was an issue'});
+  response.render('pages/error', {error: 'There was an issue. Stop breaking things!'});
 }
 
 //-------------------*
@@ -147,22 +138,16 @@ function errorPage(error, response){
 
 function newSearch(request, response){
   response.render('pages/searches/new');
-  // response.render('pages/index');
 }
 
 function performSearch(request, response){
   let url = `https://www.googleapis.com/books/v1/volumes?q=+in${request.body.search[1]}:${request.body.search[0]}`;
 
-
-
   superagent.get(url)
     .then(apiResponse => apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
-
     .then(books => response.render('pages/searches/show', {searchResults: books}))
-    // .then(books => response.render('pages/searches/new', {searchResults: books}))
     .catch(console.error);
 }
-
 
 //-------------------*
 //
@@ -171,14 +156,12 @@ function performSearch(request, response){
 // ------------------*
 
 
-function getBooks(request, response){
+function loadHome(request, response){
   let SQL = 'SELECT * FROM books;';
-  // let values = [request.params.book_id];
 
   return client.query(SQL)
     .then(results => {
-      console.log(results.rows);
-      response.render('pages/index', {savedBooks: results.rows, booksAmount: results.rows.length});
+      response.render('pages/index', {result: results.rows, booksAmount: results.rows.length});
     })
     .catch(err => {
       console.log('get books function issue');
@@ -192,35 +175,66 @@ function getOneBook(request, response){
 
   return client.query(SQL, values)
     .then(result => {
-      response.render('pages/books/show', {book: result.rows[0]});
+      response.render('pages/books/show', {results: result.rows[0]});
     })
     .catch(err => errorPage(err, response));
 }
 
-function showBook(request, response){
-  request.render('pages/index');
-}
+//save
 
 function saveBook(request, response){
+  let { title, author, isbn, image_url, description, bookshelf } = request.body;
+
+  let SQL = 'INSERT INTO books(title, author, isbn, image_url, description, bookshelf) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;';
+
+  let values = [title, author, isbn, image_url, description, bookshelf];
+
+
   console.log('in save book');
   console.log('saveBook function', request.body);
-  let newBook = new Book(request.body);
-  return newBook.save()
-    .then(book => {
-      console.log('.then saveBook function',book);
-      // response.redirect(`/books/:${book.rows[0].id}`);
-      // console.log('save book response',response);
-    });
+
+  return client.query(SQL, values)
+    .then(results => response.redirect(`/books/${results.row[0].id}`))
+    .catch(err => errorPage(err, response));
+
 }
+
+
+//update
+
+function updateBook(request, response){
+  let { title, author, isbn, image_url, description, bookshelf } = request.body;
+
+  let SQL = 'UPDATE books SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5, bookshelf=$6, WHERE id=$7;';
+  console.log(request.params.id);
+  let values = [title, author, isbn, image_url, description, bookshelf, request.params.id];
+
+  return client.query(SQL, values)
+    .then(response.redirect(`/books/${request.params.id}`))
+    .catch(err => errorPage(err, response));
+
+}
+
+
+//delete
+// function deleteBook(request, response){
+
+// }
 
 
 //-------------------*
 //
-// Catch All
+// Catch All Route
 //
 // ------------------*
 
 app.get('*', (request, response) => response.status(404).send('This route does not exist'));
+
+//-------------------*
+//
+// Entry Point/ Power On
+//
+// ------------------*
 
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 
