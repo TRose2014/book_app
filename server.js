@@ -33,6 +33,10 @@ const PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
 
+//dev out methodoverride: look at urlencoded POST bodies and delete them
+
+
+
 //-------------------*
 //
 // DataBase Setup
@@ -68,18 +72,16 @@ let errorMessage = (error, response) => {
 //
 // ------------------*
 
-app.get('/', getBooks);
-// app.get('/hello');
+app.get('/', loadHome);
 app.get('/searches/new', newSearch);
-app.post('/searches/new', performSearch);
-app.get('/books/:id', getOneBook);
+app.post('/searches', performSearch);
+app.get('/books/:id', getBook);
+app.put('/books/:id', updateBook);
 app.get('/add', showBook);
-
-app.post('/books', saveBook);
-app.post('/searches', newSearch);
 app.get('/error', errorPage);
 
-
+// need a delete route
+// something like app.delete('/books/:id, deleteBook);
 
 //-------------------*
 //
@@ -88,12 +90,18 @@ app.get('/error', errorPage);
 // ------------------*
 
 function Book(info) {
-  this.image_url = convertURL(info.imageLinks.thumbnail) || 'https://i.imgur.com/J5LVHEL.jpg';
+
+  //add logic to handle getting multiple authors back
+  //maybe just list first one?
+
+  let image = convertURL(info.imageLinks.thumbnail);
+
   this.title = info.title || 'No title available';
-  this.authors = info.authors || 'No authors available';
+  this.author = info.authors || 'No authors available';
   this.isbn = info.industryIdentifiers[0].identifier || 'No ISBN available';
+  this.image_url = image || 'https://i.imgur.com/J5LVHEL.jpg';
   this.description = info.description || 'No description found';
-  this.bookshelf = 'Action';
+  this.bookshelf = 'select category';
 
 }
 
