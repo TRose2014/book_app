@@ -1,0 +1,11 @@
+<form class="hide-me" action="<%= formAction === 'Add' ? '/book' : `/books/${element.id}` %>" method="post">
+  <input type="hidden" name="_method" value="<%= formAction === 'Add' ? 'post' : 'put' %>">
+  
+  <input type="text" name="title" value="<%=element.title%>" placeholder="<%= element.title %>" required>
+  <input type="text" name="author" value="<%=element.author%>" placeholder="<%= element.author %>" required>
+  <input type="text" name="isbn" value="<%=element.isbn%>" placeholder="<%= element.isbn %>" required>
+  <textarea name="description" placeholder="<%=element.description%>" cols="30" rows="10" required><%=element.description%></textarea>
+  
+  <input type="text" name="bookshelf" placeholder="Enter bookshelf/category" required>
+  <button class="submitForm" type="submit"><%=formAction%>Update Book to Database</button>
+</form>

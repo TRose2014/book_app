@@ -1,17 +1,21 @@
 <!DOCTYPE >
 <html lang="en">
     <%- include('../../layout/head') %>
- <body>
-   <main>
-    <h1>Welcome to Our Book App: Search results</h1>
-    <p><a href="/">Home</a></p>
-    <%- include('../../layout/book-layout') %>
-    <button class="book-item" type="submit">Select this Book</button>
-  
-  
-   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+  <body>
+    <main id="bookSearchSection">
+      <h1>Book App: Search results</h1>
+      <a href="/"><button>Home</button></a>
+      <% searchResults.forEach(book => { %>
+        <section>
+          <%- include('../books/detail', {book: book}) %>
+          <button class="viewButton">Select this Book</button>
+          <%- include('../books/edit', {element: book, formAction: 'Add'}) %>
+        </section>
+      <% }) %>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
     crossorigin="anonymous"></script>
     <script src="/js/app.js"></script>
- </body>
+  </body>
 </html>

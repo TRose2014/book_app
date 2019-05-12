@@ -4,18 +4,14 @@
  <body>
    <main>
    <%- include('../layout/header') %>
-    <p>Total number of books: <%=booksAmount%></p>
+    <h1>Books Currently in the Database</h1>
+    <h3>Total number: <%=booksAmount%></h3>
+    <a href="/searches/new"><button>Search Books</button></a>
     <section class="book-view container">
-      <ul id="book-list">
-        <% savedBooks.forEach(book => { %>
-          <li class="book-item" data.id="<%= book.id %>">
-            <li class= "images"><img src= <%=book.image_url %></li>
-            <h4>Book: <%= book.title %></h4>
-            <p>Author: <%= book.author %></p>
-            <a href="/books/<%=book.id%>">View Details</a>
-          </li>
-        <% }) %>
-      </ul>
+      <% result.forEach(results => { %>
+        <%- include('./books/detail', {book: results}) %>
+        <a href="/books/<%=result.id%>"><button class="viewButton">View Book Details</button></a>
+      <% }) %>
     </section>
   </main>
  </body>

@@ -1,14 +1,18 @@
 <!DOCTYPE >
 <html lang="en">
-    <%- include('../../layout/head') %>
- <body>
+  <%- include('../../layout/head') %>
+  <body>
     <%- include('../../layout/header') %>
     <main>
-        <%- include('./detail', { book: book }) %>
+      <a href="/"><button>Home</button></a>
+      <h2>Book Details</h2>
+      <%- include('./detail', {book: results}) %>
+      <button class="viewButton">Update Book Details</button>
+      <%- include('./edit', {element: results, formAction: 'Update'}) %>
     </main>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
     crossorigin="anonymous"></script>
     <script src="/js/app.js"></script>
- </body>
- </html>
+  </body>
+</html>

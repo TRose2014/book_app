@@ -10,6 +10,7 @@ const express = require('express');
 const superagent = require('superagent');
 require('dotenv').config();
 const pg = require('pg');
+const methodOverride = require('method-override');
 
 
 
@@ -31,6 +32,16 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
+
+//dev out methodoverride: look at urlencoded POST bodies and delete them
+
+app.use(methodOverride(function (request, response){
+  if(request.body && typeof request.body === 'object' && '_method' in request.body){
+    var method = request.body._method;
+    delete request.body._method;
+    return method;
+  }
+}));
 
 //-------------------*
 //
@@ -67,18 +78,16 @@ let errorMessage = (error, response) => {
 //
 // ------------------*
 
-app.get('/', getBooks);
-// app.get('/hello');
-app.get('/error', errorPage);
-app.post('/searches/new', performSearch);
+app.get('/', loadHome);
 app.get('/searches/new', newSearch);
+app.post('/searches', performSearch);
+app.post('/book', saveBook);
 app.get('/books/:id', getOneBook);
-app.get('/add', showBook);
+app.put('/books/:id', updateBook);
+app.get('/error', errorPage);
 
-
-app.post('/searches', newSearch);
-
-
+// need a delete route
+// something like app.delete('/books/:id, deleteBook);
 
 //-------------------*
 //
@@ -87,23 +96,21 @@ app.post('/searches', newSearch);
 // ------------------*
 
 function Book(info) {
-  this.image_url = convertURL(info.imageLinks.thumbnail) || 'https://i.imgur.com/J5LVHEL.jpg';
+
+  //add logic to handle getting multiple authors back
+  //maybe just list first one?
+
+  let image = convertURL(info.imageLinks.thumbnail);
+
   this.title = info.title || 'No title available';
-  this.authors = info.authors || 'No authors available';
+  this.author = info.authors || 'No authors available';
   this.isbn = info.industryIdentifiers[0].identifier || 'No ISBN available';
+  this.image_url = image || 'https://i.imgur.com/J5LVHEL.jpg';
   this.description = info.description || 'No description found';
-  this.bookshelf = 'Action';
+  this.bookshelf = 'select category';
+
 }
 
-Book.prototype.save = function(){
-  let SQL = `INSERT INTO books 
-    (image_url, title, authors, isbn, description, bookshelf)
-    VALUES ($1, $2, $3, $4, $5 $6)
-    RETURNING id;`;
-
-  let values = Object.values(this);
-  return client.query(SQL, values);
-};
 
 //-------------------*
 //
@@ -126,7 +133,7 @@ const convertURL = (data) => {
 // ------------------*
 
 function errorPage(error, response){
-  response.render('pages/error', {error: 'There was an issue'});
+  response.render('pages/error', {error: 'There was an issue. Stop breaking things!'});
 }
 
 //-------------------*
@@ -137,39 +144,33 @@ function errorPage(error, response){
 
 function newSearch(request, response){
   response.render('pages/searches/new');
-  // response.render('pages/index');
 }
 
 function performSearch(request, response){
   let url = `https://www.googleapis.com/books/v1/volumes?q=+in${request.body.search[1]}:${request.body.search[0]}`;
 
-
-
   superagent.get(url)
     .then(apiResponse => apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
-
     .then(books => response.render('pages/searches/show', {searchResults: books}))
-    // .then(books => response.render('pages/searches/new', {searchResults: books}))
     .catch(console.error);
 }
-
 
 //-------------------*
 //
 // Retrieve from DataBase
 //
 // ------------------*
-function getBooks(request, response){
+
+
+function loadHome(request, response){
   let SQL = 'SELECT * FROM books;';
-  // let values = [request.params.book_id];
 
   return client.query(SQL)
     .then(results => {
-      console.log(results.rows);
-      response.render('pages/index', {savedBooks: results.rows, booksAmount: results.rows.length});
+      response.render('pages/index', {result: results.rows, booksAmount: results.rows.length});
     })
     .catch(err => {
-      console.log('oops');
+      console.log('get books function issue');
       errorPage(err, response);
     });
 }
@@ -180,33 +181,66 @@ function getOneBook(request, response){
 
   return client.query(SQL, values)
     .then(result => {
-      response.render('pages/books/show', {book: result.rows[0]});
+      response.render('pages/books/show', {results: result.rows[0]});
     })
     .catch(err => errorPage(err, response));
 }
 
-function showBook(request, response){
-  request.render('pages/index');
+//save
+
+function saveBook(request, response){
+  let { title, author, isbn, image_url, description, bookshelf } = request.body;
+
+  let SQL = 'INSERT INTO books(title, author, isbn, image_url, description, bookshelf) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;';
+
+  let values = [title, author, isbn, image_url, description, bookshelf];
+
+
+  console.log('in save book');
+  console.log('saveBook function', request.body);
+
+  return client.query(SQL, values)
+    .then(results => response.redirect(`/books/${results.rows[0].id}`))
+    .catch(err => errorPage(err, response));
+
 }
 
-let saveBook = (request, response) => {
-  let newBook = new Book(request.body);
-  return newBook.save()
-    .then(book => {
-      response.redirect(`/books/;${book.rows[0].id}`);
-    });
-};
 
-app.post('/books', saveBook);
+//update
+
+function updateBook(request, response){
+  let { title, author, isbn, image_url, description, bookshelf } = request.body;
+
+  let SQL = 'UPDATE books SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5, bookshelf=$6, WHERE id=$7;';
+  console.log(request.params.id);
+  let values = [title, author, isbn, image_url, description, bookshelf, request.params.id];
+  console.log(values);
+  
+  return client.query(SQL, values)
+    .then(response.redirect(`/books/${request.params.id}`))
+    .catch(err => errorPage(err, response));
+
+}
+
+
+//delete
+// function deleteBook(request, response){
+
+// }
 
 
 //-------------------*
 //
-// Catch All
+// Catch All Route
 //
 // ------------------*
 
 app.get('*', (request, response) => response.status(404).send('This route does not exist'));
 
-app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
+//-------------------*
+//
+// Entry Point/ Power On
+//
+// ------------------*
 
+app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
