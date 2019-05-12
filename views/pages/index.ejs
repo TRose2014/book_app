@@ -4,7 +4,8 @@
  <body>
    <main>
    <%- include('../layout/header') %>
-    <p>Total number of books: <%=booksAmount%></p>
+    <h1>Books Currently in the Database</h1>
+    <h3>Total number of books: <%=booksAmount%></h3>
     <section class="book-view container">
       <ul id="book-list">
         <% savedBooks.forEach(book => { %>
@@ -20,3 +21,5 @@
   </main>
  </body>
 </html>
+
+
