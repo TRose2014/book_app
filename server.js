@@ -69,14 +69,14 @@ let errorMessage = (error, response) => {
 
 app.get('/', getBooks);
 // app.get('/hello');
-app.get('/error', errorPage);
-app.post('/searches/new', performSearch);
 app.get('/searches/new', newSearch);
+app.post('/searches/new', performSearch);
 app.get('/books/:id', getOneBook);
 app.get('/add', showBook);
 
-
+app.post('/books', saveBook);
 app.post('/searches', newSearch);
+app.get('/error', errorPage);
 
 
 
@@ -93,12 +93,13 @@ function Book(info) {
   this.isbn = info.industryIdentifiers[0].identifier || 'No ISBN available';
   this.description = info.description || 'No description found';
   this.bookshelf = 'Action';
+
 }
 
 Book.prototype.save = function(){
   let SQL = `INSERT INTO books 
     (image_url, title, authors, isbn, description, bookshelf)
-    VALUES ($1, $2, $3, $4, $5 $6)
+    VALUES ($1, $2, $3, $4, $5, $6)
     RETURNING id;`;
 
   let values = Object.values(this);
@@ -159,6 +160,8 @@ function performSearch(request, response){
 // Retrieve from DataBase
 //
 // ------------------*
+
+
 function getBooks(request, response){
   let SQL = 'SELECT * FROM books;';
   // let values = [request.params.book_id];
@@ -169,7 +172,7 @@ function getBooks(request, response){
       response.render('pages/index', {savedBooks: results.rows, booksAmount: results.rows.length});
     })
     .catch(err => {
-      console.log('oops');
+      console.log('get books function issue');
       errorPage(err, response);
     });
 }
@@ -189,15 +192,17 @@ function showBook(request, response){
   request.render('pages/index');
 }
 
-let saveBook = (request, response) => {
+function saveBook(request, response){
+  console.log('in save book');
+  console.log('saveBook function', request.body);
   let newBook = new Book(request.body);
   return newBook.save()
     .then(book => {
-      response.redirect(`/books/;${book.rows[0].id}`);
+      console.log('.then saveBook function',book);
+      // response.redirect(`/books/:${book.rows[0].id}`);
+      // console.log('save book response',response);
     });
-};
-
-app.post('/books', saveBook);
+}
 
 
 //-------------------*

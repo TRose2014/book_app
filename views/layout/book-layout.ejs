@@ -6,13 +6,13 @@
         <li><span>Authors:</span> <%= book.authors %> </li>
         <button class= "view-book" type="submit">Select this Book</button>
         
-         <form class= "hide-me">
+         <form class= "hide-me" action="/books" method="post">
             <input type="text" name="title" value="<%=book.title%>">
             <input type="text" name="author" value="<%=book.author%>">
             <input type="text" name="isbn" value="<%=book.isbn%>">
             <textarea name="description" cols="30" rows="10"><%-book.description%></textarea>
             <input type="text" name="bookshelf" placeholder="Fantasy" required>
-            <button type="submit">Add to database</button>
+            <button action="/books" method="put" type="submit">Add to database</button>
          </form>
       <% }) %>
     </ul>
