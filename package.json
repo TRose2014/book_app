@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "seed": "psql books_app -f ./data/books.sql"
+    "seed": "psql -d books_app -f ./data/books.sql"
   },
   "repository": {
     "type": "git",

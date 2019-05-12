@@ -122,12 +122,23 @@ function Book(info) {
 // ------------------*
 
 const convertURL = (data) => {
-  let urlRegEx = /^http?:/g;
-  if (urlRegEx.test(data)){
-    return data.replace('http', 'https');
+  if(data.indexOf('https') === -1){
+    let secureURL = data.replace('http', 'https');
+    return secureURL;
+  }else{
+    return data;
   }
-  return data;
 };
+
+
+// const convertURL = (data) => {
+//   let urlRegEx = /^http?:/g;
+//   if (urlRegEx.test(data)){
+//     return data.replace('http', 'https');
+//   }
+//   console.log('in convertURL', data);
+//   return data;
+// };
 
 //-------------------*
 //
@@ -182,7 +193,7 @@ function loadHome(request, response){
 function getOneBook(request, response){
   let SQL = `SELECT * FROM books WHERE id=$1;`;
   let values = [request.params.id];
-  
+
   console.log('in getOneBook', request.params.id);
 
   return client.query(SQL, values)
