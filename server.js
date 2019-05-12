@@ -33,7 +33,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
 
-//dev out methodoverride: look at urlencoded POST bodies and delete them
+//dev out methodoverride: looks at urlencoded POST bodies and delete them
 
 app.use(methodOverride(function (request, response){
   if(request.body && typeof request.body === 'object' && '_method' in request.body){
@@ -106,7 +106,7 @@ function Book(info) {
   let image = convertURL(info.imageLinks.thumbnail);
 
   this.title = info.title || 'No title available';
-  this.author = info.authors || 'No authors available';
+  this.author = info.authors || 'No author available';
   this.isbn = info.industryIdentifiers[0].identifier || 'No ISBN available';
   this.image_url = image || 'https://i.imgur.com/J5LVHEL.jpg';
   this.description = info.description || 'No description found';
@@ -155,7 +155,7 @@ function performSearch(request, response){
   superagent.get(url)
     .then(apiResponse => apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
     .then(books => response.render('pages/searches/show', {searchResults: books}))
-    .catch(console.error);
+    .catch(err => errorPage(err, response));
 }
 
 //-------------------*
@@ -198,7 +198,7 @@ function saveBook(request, response){
 
   let values = [title, author, isbn, image_url, description, bookshelf];
 
-  console.log('in save book');
+  console.log('in save book', values);
   console.log('saveBook function', request.body);
 
   return client.query(SQL, values)
@@ -221,7 +221,7 @@ function updateBook(request, response){
 
   console.log(values);
 
-  return client.query(SQL, values)
+  client.query(SQL, values)
     .then(response.redirect(`/books/${request.params.id}`))
     .catch(err => errorPage(err, response));
 }

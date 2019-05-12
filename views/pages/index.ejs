@@ -10,7 +10,7 @@
     <section class="book-view container">
       <% result.forEach(results => { %>
         <%- include('./books/detail', {book: results}) %>
-        <a href="/books/<%=result.id%>"><button class="viewButton">View Book Details</button></a>
+        <a href="/books/<%=results.id%>"><button class="viewButton">View Book Details</button></a>
       <% }) %>
     </section>
   </main>
