@@ -194,7 +194,7 @@ function saveBook(request, response){
   console.log('saveBook function', request.body);
 
   return client.query(SQL, values)
-    .then(results => response.redirect(`/books/${results.row[0].id}`))
+    .then(results => response.redirect(`/books/${results.rows[0].id}`))
     .catch(err => errorPage(err, response));
 
 }
