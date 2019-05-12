@@ -208,7 +208,8 @@ function updateBook(request, response){
   let SQL = 'UPDATE books SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5, bookshelf=$6, WHERE id=$7;';
   console.log(request.params.id);
   let values = [title, author, isbn, image_url, description, bookshelf, request.params.id];
-
+  console.log(values);
+  
   return client.query(SQL, values)
     .then(response.redirect(`/books/${request.params.id}`))
     .catch(err => errorPage(err, response));
