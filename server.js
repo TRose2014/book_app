@@ -171,9 +171,10 @@ function loadHome(request, response){
   return client.query(SQL)
     .then(results => {
       response.render('pages/index', {result: results.rows, booksAmount: results.rows.length});
+      console.log('in LoadHome function', results.rows);
     })
     .catch(err => {
-      console.log('get books function issue');
+      console.log('loadHome function issue');
       errorPage(err, response);
     });
 }
@@ -181,6 +182,8 @@ function loadHome(request, response){
 function getOneBook(request, response){
   let SQL = `SELECT * FROM books WHERE id=$1;`;
   let values = [request.params.id];
+  
+  console.log('in getOneBook', request.params.id);
 
   return client.query(SQL, values)
     .then(result => {
