@@ -70,6 +70,17 @@ Finish time:
 
 Actual time needed to complete: 
 
+### Day 3
+#### Number and name of feature: Feature #1 
+
+Estimate of time needed to complete: 1 hr 20 minute
+
+Start time: 8:50am
+
+Finish time: 
+
+Actual time needed to complete: 
+
 ## Program Setpup
 
 $ npm install
@@ -86,6 +97,15 @@ Technologies: express, postgres, superagent, dotenv, ejs, methodOverride
 <!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an examples:  -->
 
 05-07-2019 12:30pm - Application now has a fully-functional express server, with GET and POST routes for the book resource.
+
+05-12-2019 5:30pm - Application now is fully functional
+
+## Color Palette
+Body - cornsilk
+Section- blanchedalmond
+Font color - black
+Font family: h1, h2 : Tangerine
+Font family: Prata
 
 ## Credits and Collaborations
 Matt Wilkin

@@ -5,14 +5,54 @@
 
 body {
   background-color:cornsilk;
+  font-size: 18px;
  }
 
 h1{
-  font-size: 30px;
+  font-size: 70px;
+  
+}
+
+h2{
+  font-size: 64px;
+}
+
+h3{
+  font-size: 52px;
+}
+
+h4{
+  font-size: 36px;
 }
 
 
+h1, h2, h3, h4{
+  font-family: Tangerine;
+}
+
  p, li {
    font-size: 18px;
+   font-family: Prata;
+   
+ }
+
+
+ h1, h2, h3, h4, p, li{
+  text-align: center;
+  margin-bottom: 3%;
+ }
+
+ b{
+   font-weight: bolder;
+ }
+
+ button{
+   font-family: Prata;
+ }
+
+ textarea{
+   font-family: Prata;
+   font-size: 18px;
+
  }
  

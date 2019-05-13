@@ -3,17 +3,33 @@ main{
   flex-direction: column;
 }
 
+a{
+  display: flex;
+  justify-content: center;
+}
+
 section{
   display: flex;
   flex-flow: row wrap;
 }
 
-h1,p{
+h1, h2, h3, p{
   display: flex;
   justify-content: center;
 }
 
-.images{
+img{
   display: flex;
   justify-content: center
+}
+
+footer{
+  display: flex;
+  justify-content: center;
+  margin-top: 2%;
+}
+
+.fab{
+  font-size: 40px;
+  margin-left: 5%;
 }

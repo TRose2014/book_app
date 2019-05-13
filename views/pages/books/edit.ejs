@@ -5,6 +5,16 @@
   <input type="text" name="isbn" value="<%=element.isbn%>" placeholder="<%= element.isbn %>" required>
   <input type="text" name="image_url" value="<%=element.image_url%>" placeholder="<%= element.image_url %>" required>
   <textarea name="description" placeholder="<%=element.description%>" cols="30" rows="10" required><%=element.description%></textarea>
-  <input type="text" name="bookshelf" placeholder="Enter bookshelf/category" required>
-  <button class="submitForm" type="submit"><%=formAction%>Update Book to Database</button>
+  <select name="bookshelf" required>
+    <option value="action">Action</option>
+    <option value="fiction">Fiction</option>
+    <option value="nonFiction">Non-Fiction</option>
+    <option value="kids">Kids</option>
+    <option value="lifeStyle">Life Style</option>
+    <option value="fantasy">Fantasy</option>
+    <option value="mystery">Mystery</option>
+    <option value="romance">Romance</option>
+    <option value="sciFi">Science Fiction</option>
+  </select>
+  <button class="submitForm" type="submit"><%=formAction%> Book to Database</button>
 </form>
