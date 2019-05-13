@@ -1,8 +1,11 @@
 # Book_app
 
 **Author**: Tia Rose and Matt Wilkin
+
 **Heroku**: https://tr-mw-booklist.herokuapp.com/
+
 **Version**: 1.0.0 (increment the patch/fix version number if you make more commits past your first submission)
+
 
 ## Overview
 Cool book app that allows a user to search for books by title or author. The app access the Google Books API and stores the results in a database.
