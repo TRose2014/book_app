@@ -6,6 +6,7 @@ h1, span{
 
 a{
   font-size: 1.5em;
+  text-decoration: none;
 }
 
 li{
@@ -15,23 +16,63 @@ li{
 
 form{
   display: flex;
-  flex-flow: column nowrap;
+  flex-flow: column wrap;
+  max-width: 100%;
+}
+
+form textarea{
+  margin-bottom: 5%;
 }
 
 input{
   font-size: 30px;
   display: flex;
-  flex-flow: column nowrap;
+  flex-flow: column wrap;
   background-color: whitesmoke;
+  margin-bottom: 5%;
+}
 
+select{
+  font-size: 30px;
+  background-color: whitesmoke;
+  margin-bottom: 5%;
+
+}
+
+#bookSearch{
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  justify-content: center;
+  background-color: blanchedalmond;
+}
+
+section{
+  justify-content: center;
+}
+
+#bookSearchSection textarea{
+  font-size: 20px;
 }
 
 button{
   font-size: 40px;
   background: whitesmoke;
+  margin-bottom: 5%;
+}
+
+img{
+  max-width: 20%;
 }
 
 .hide-me{
-  /* display: none; */
-  visibility: hidden;
+  display: none;
+}
+
+.showBook{
+  min-width: 100%;
+}
+
+.fab{
+  color: black;
 }
